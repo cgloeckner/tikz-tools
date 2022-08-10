@@ -1,0 +1,48 @@
+\newcommand{\dreieckSkizze} {
+	\coordinate (A) at (0, 0);
+	\coordinate (B) at (3, 0);
+	\coordinate (C) at (2, 2);
+}
+
+\newcommand{\dreieckSSS}[3] {
+	\coordinate (A) at (0, 0);
+	\coordinate (B) at (#3 cm, 0);
+
+	% helper circles
+	\draw [name path=AC, help lines] (A) circle (#2 cm);
+	\draw [name path=BC, help lines] (B) circle (#1 cm);
+
+	\draw [name intersections={of=AC and BC, by=C1}];
+	\node at (C1) {\textbf x};
+
+	\draw [name intersections={of=BC and AC, by=C2}];
+	\node at (C2) {\textbf x};
+}
+
+\newcommand{\dreieckWSW}[3] {
+	\coordinate (A) at (0, 0);
+	\coordinate (B) at (#2 cm, 0);
+
+	% helper lines for intersection
+	\draw [name path=AP, help lines, rotate=#1] (A) to ++(1.5cm * #2, 0);
+	\draw [name path=BP, help lines, rotate=-#3] (B) to ++(-1.5cm * #2, 0);
+
+	\draw [name intersections={of=AP and BP, by=C}];
+	\node at (C) {\textbf x};
+
+	\draw (A) to (B) to (C) to cycle;
+}
+
+\newcommand{\dreieckSWS}[3] {
+	\coordinate (A) at (0, 0);
+	\coordinate (B) at (#1 cm, 0);
+	
+	% helper line
+	\draw [name path=Bline, help lines, rotate=-#2] (B) to ++(-1.5cm * #1, 0);
+
+	% helper circle
+	\draw [name path=Bcirc, help lines] (B) circle (#3 cm);
+
+	\draw [name intersections={of=Bline and Bcirc, by=C}];
+	\node at (C) {\textbf x};
+}
