@@ -1,14 +1,12 @@
 # tikz-tools
 Some tools for creating maths stuff for school purposes.
-This is only a draft version, quickly bashed together.
+
+This is only a draft version, quickly bashed together. Things are named in German, so be aware :D 
 
 ## Constructing Triangles
 ```tex
 \input{./dreiecke.tikz}
 ```
-
-Things are named in German, so be aware :D 
-
 Note, that sometimes two points are generated, named C1 and C2 instead of C. Pick what suits your needs.
 
 ### Given by Side-Side-Side
