@@ -46,3 +46,16 @@
 	\draw [name intersections={of=Bline and Bcirc, by=C}];
 	\node at (C) {\textbf x};
 }
+
+\newcommand{\dreieckSsW}[3] {
+	\coordinate (A) at (0, 0);
+	\coordinate (B) at (#2 cm, 0);
+
+	% helper lines
+	\draw [name path=BC, help lines] (B) circle (#1 cm);
+	\draw [name path=AC, help lines, rotate=#3] (A) to ++(2.5cm * #2, 0);
+
+	\draw [name intersections={of=BC and AC, by={C, C2}}];
+	\node at (C) {\textbf x};
+}
+
