@@ -1,3 +1,164 @@
+% Settings #1, um #2 durch #3
+\newcommand{\kreisDurch}[3] {
+	\draw[#1]
+		let \p1 = ($ (#3) - (#2) $),
+		\n1 = {veclen(\x1,\y1)}
+		in (#2) circle (\n1); 
+}
+
+% auf #1 um #2 durch #3, Schnittpunkt #4, Sichtradius #5 um Schnitt
+\newcommand{\abtragenDurch}[5] {
+	% Schnittpunkt bestimmen
+	\begin{scope}
+		\clip (0, 0) rectangle (0, 0);
+		\draw[name path=#1#2#3#4, help lines]
+			let \p1 = ($ (#3) - (#2) $),
+			\n1 = {veclen(\x1,\y1)}
+			in (#2) circle (\n1);
+		\draw[name intersections={of=#1 and #1#2#3#4, by={#4}}];
+	\end{scope}
+	
+	% Ausschnitt um #4 zeichnen
+	\begin{scope}
+		\clip (#4) circle (#5);
+		\draw[name path=#1#2#3#4, help lines]
+			let \p1 = ($ (#3) - (#2) $),
+			\n1 = {veclen(\x1,\y1)}
+			in (#2) circle (\n1);
+	\end{scope}
+}
+
+% auf #1 um #2 mit Radius #3, Schnittpunkt #4, Sichtradius #5 um Schnitt
+\newcommand{\abtragen}[5] {
+	% Schnittpunkt bestimmen
+	\begin{scope}
+		\clip (0, 0) rectangle (0, 0);
+		\draw[name path=#1#2#3#4, help lines] (#2) circle (#3);
+		\draw[name intersections={of=#1 and #1#2#3#4, by={#4}}];
+	\end{scope}
+	
+	% um Schnittpunkt herum zeichnen
+	\begin{scope}
+		\clip (#4) circle (#5);
+		\draw[name path=#1#2#3#4, help lines] (#2) circle (#3);
+		\draw[name intersections={of=#1 and #1#2#3#4, by={#4}}];
+	\end{scope}
+}
+% auf #1 um #2 mit Radius #3, Schnittpunkt #4 und #5, Sichtradius #6 und #7 um Schnitte
+\newcommand{\abtragenBeide}[7] {
+	% Schnittpunkt bestimmen
+	\begin{scope}
+		\clip (0, 0) rectangle (0, 0);
+		\draw[name path=#1#2#3#4, help lines] (#2) circle (#3);
+		\draw[name intersections={of=#1 and #1#2#3#4, by={#4, #5}}];
+	\end{scope}
+	
+	% um Schnittpunkt #4 herum zeichnen
+	\begin{scope}
+		\clip (#4) circle (#6);
+		\draw[name path=#1#2#3#4, help lines] (#2) circle (#3);
+	\end{scope}
+	
+	% um Schnittpunkt #5 herum zeichnen
+	\begin{scope}
+		\clip (#5) circle (#7);
+		\draw[name path=#1#2#3#4, help lines] (#2) circle (#3);
+	\end{scope}
+}
+
+% auf Strecke #1 -- #2, Radius #3, Endpunkte #4 und #5, Sichtradius #6
+\newcommand{\mittelsenkrechte}[6] {
+	% Schnittpunkte bestimmen
+	\begin{scope}
+		\clip (0, 0) rectangle (0, 0);
+		\draw[name path=k#1r#2, help lines] (#1) circle (#3);
+		\draw[name path=k#2r#1, help lines] (#2) circle (#3);
+		
+		\draw[name intersections={of=k#1r#2 and k#2r#1, by={#4, #5}}];
+	\end{scope}
+
+	% Ausschnitt um #4 zeichnen
+	\begin{scope}
+		\clip (#4) circle (#6);
+		\draw[name path=k#1r#2, help lines] (#1) circle (#3);
+		\draw[name path=k#2r#1, help lines] (#2) circle (#3);
+	\end{scope}
+
+	% Ausschnitt um #5 zeichnen
+	\begin{scope}
+		\clip (#5) circle (#6);
+		\draw[name path=k#1r#2, help lines] (#1) circle (#3);
+		\draw[name path=k#2r#1, help lines] (#2) circle (#3);
+	\end{scope}
+}
+
+% für Eckpunkt #1 zwischen Gerade #2 und #3 mit Radius #4, sichtbar innerhalb #5, sowie Endpunkten #6 und #7, sichtbar im Radius #8 und #9
+\newcommand{\winkelhalbierende}[9] {
+	\abtragen{#2}{#1}{#4}{P}{#5}
+	\abtragen{#3}{#1}{#4}{Q}{#5}
+
+	% Schnittpunkt bestimmen
+	\begin{scope}
+		\clip (0, 0) rectangle (0, 0);
+		\kreisDurch{name path=kPW}{P}{#1}
+		\kreisDurch{name path=kQW}{Q}{#1}
+		\draw[name intersections={of=kPW and kQW, by={#6, #7}}];
+	\end{scope}
+
+	% um #6 zeichnen
+	\begin{scope}
+		\clip (#6) circle (#8);
+		\kreisDurch{help lines}{P}{#1}
+		\kreisDurch{help lines}{Q}{#1}
+	\end{scope}
+
+	% um #7 zeichnen
+	\begin{scope}
+		\clip (#7) circle (#9);
+		\kreisDurch{help lines}{P}{#1}
+		\kreisDurch{help lines}{Q}{#1}
+	\end{scope}
+}
+
+% von Höhe durch #1 auf Strecke #2 -- #3, Radius für Mittelsenkrechte #4 --> Lotfußpunkt #5
+\newcommand{\lotfuss}[5] {
+	\mittelsenkrechte{#2}{#3}{#4}{P#1#2#3}{Q#1#2#3}{0cm}
+	% hin- und zurückzeichnen, da die Richtung nicht klar ist
+	\draw[name path=h#1#2#3, draw=none] (#1)
+		to ++($ (Q#1#2#3)-(P#1#2#3) $)
+		to ++($ (P#1#2#3)-(Q#1#2#3) $)
+		to ++($ (P#1#2#3)-(Q#1#2#3) $);
+	\draw[name path=g#1#2#3, draw=none] (#2) to (#3);
+
+	\draw[name intersections={of=h#1#2#3 and g#1#2#3, by={#5}}];
+}
+
+% von Höhe durch #1 auf Strecke #2 -- #3 bzw. #4, Radius für Mittelsenkrechte #5 --> Lotfußpunkt #6
+% Hinweis: liegt der Lotfußpunkt außerhalb des Dreiecks, muss die entsprechende Gerade angegeben werden (um den Schnitt korrekt zu bestimmen)
+\newcommand{\lotfussAussen}[6] {
+	\mittelsenkrechte{#2}{#3}{#5}{P#1#2#3}{Q#1#2#3}{0cm}
+	\draw[help lines, draw=none] (P#1#2#3) to (Q#1#2#3);
+	% hin- und zurückzeichnen, da die Richtung nicht klar ist
+	\draw[name path=h#1#2#3, draw=none] (#1)
+		to ++($ (Q#1#2#3)-(P#1#2#3) $)
+		to ++($ (P#1#2#3)-(Q#1#2#3) $)
+		to ++($ (P#1#2#3)-(Q#1#2#3) $);
+	\draw[name intersections={of=h#1#2#3 and #4, by={#6}}];
+}
+
+% Mitte von Strecke #1 -- #2, Radius #3 für Mittelsenkrechte, Mittelpunkt #4
+\newcommand{\seitenmitte}[4] {
+	\mittelsenkrechte{#1}{#2}{#3}{P#1#2#3}{Q#1#2#3}{0cm}
+	\draw[name path=gAB#1#2#3, draw=none] (#1) to (#2);
+	\draw[name path=mAB#1#2#3, draw=none] (P#1#2#3) to (Q#1#2#3);
+	\draw[name intersections={of=gAB#1#2#3 and mAB#1#2#3, by={#4}}];
+}
+
+% ==================================
+
+
+
+
 \newcommand{\dreieckSkizze} {
 	\coordinate (A) at (0, 0);
 	\coordinate (B) at (3, 0);
@@ -24,13 +185,11 @@
 	\coordinate (B) at (#2 cm, 0);
 
 	% helper lines for intersection
-	\draw [name path=AP, help lines, rotate=#1] (A) to ++(1.5cm * #2, 0);
-	\draw [name path=BP, help lines, rotate=-#3] (B) to ++(-1.5cm * #2, 0);
+	\draw [name path=AP, help lines, rotate=#1] (A) to ++(2.5cm * #2, 0);
+	\draw [name path=BP, help lines, rotate=-#3] (B) to ++(-2.5cm * #2, 0);
 
 	\draw [name intersections={of=AP and BP, by=C}];
 	\node at (C) {\textbf x};
-
-	\draw (A) to (B) to (C) to cycle;
 }
 
 \newcommand{\dreieckSWS}[3] {
@@ -38,12 +197,12 @@
 	\coordinate (B) at (#1 cm, 0);
 	
 	% helper line
-	\draw [name path=Bline, help lines, rotate=-#2] (B) to ++(-1.5cm * #1, 0);
+	\draw [name path=BC, help lines, rotate=-#2] (B) to ++(-2.5cm * #1, 0);
 
 	% helper circle
 	\draw [name path=Bcirc, help lines] (B) circle (#3 cm);
 
-	\draw [name intersections={of=Bline and Bcirc, by=C}];
+	\draw [name intersections={of=BC and Bcirc, by=C}];
 	\node at (C) {\textbf x};
 }
 
@@ -58,4 +217,3 @@
 	\draw [name intersections={of=BC and AC, by={C, C2}}];
 	\node at (C) {\textbf x};
 }
-
