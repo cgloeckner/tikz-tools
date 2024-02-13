@@ -6,7 +6,7 @@ This is only a draft version, quickly bashed together. Things are named in Germa
 **ToC**
 
 - [dreiecke](dreiecke.md)
-- schraegbild (WIP)
+- [schraegbild](schraegbild.md) (WIP)
 - vektoren (WIP)
 - wskverteiluing (WIP)
 - syntaxdiagramme (TODO)
