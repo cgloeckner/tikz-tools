@@ -1,0 +1,191 @@
+% requires decorations.markings
+
+\newcommand{\koordSysEbene}[4] {
+	\foreach \x in {#1, ..., #2} {
+		\draw[black!50!white] (\x, #3 - 0.5) to (\x, #4 + 0.5);
+		\ifnum \x=#1 %
+		\else
+			\draw[black!30!white] (\x - 0.5, #3 - 0.5) to (\x - 0.5, #4 + 0.5);
+		\fi
+	}
+	\foreach \y in {#3, ..., #4} {
+		\draw[black!50!white] (#1 - 0.5, \y) to (#2 + 0.5, \y);
+		\ifnum \y=#3 %
+		\else
+			\draw[black!30!white] (#1 - 0.5, \y - 0.5) to (#2 + 0.5, \y - 0.5);
+		\fi
+	}
+
+	\draw[->] (#1 - 0.5, 0) to (#2 + 0.5, 0);
+	\draw[->] (0, #3 - 0.5) to (0, #4 + 0.5);
+	\node at (#2 + 0.75, 0) {$x$};
+	\node at (0, #4 + 0.75) {$y$};
+
+	\foreach \x in {#1, ..., #2} {
+		\ifnum \x=0 %
+		\else
+			\draw (\x, 0.05) to ++(0, -0.1);
+			\node at (\x, -0.25) {\x};
+		\fi
+	}
+
+	\foreach \y in {#3, ..., #4} {
+		\ifnum \y=0 %
+		\else
+			\draw (0.05, \y) to ++(-0.1, 0);
+			\node at (-0.25, \y) {\y};
+		\fi
+	}
+	
+	\clip (#1 - 1, #3 - 1) rectangle (#2 + 1, #4 + 1);
+}
+
+\newcommand{\koordEbene}[3] {
+	\coordinate (#1) at (#2, #3);
+}
+
+% e.g. \punktEbene{P}{1}{4}{right};
+\newcommand{\punktEbene}[4] {
+	\koordEbene{#1}{#2}{#3}
+	
+	\node at (#1) {$\times$};
+	\node[label=#4:$#1$] at (#1) {};
+}
+
+
+\newcommand{\achsen}[6] {
+	\pgfmathsetmacro\minx{int(ceil(#1))};
+	\pgfmathsetmacro\maxx{int(floor(#2))};
+	
+	\pgfmathsetmacro\miny{int(ceil(#3))};
+	\pgfmathsetmacro\maxy{int(floor(#4))};
+	
+	\pgfmathsetmacro\minz{int(ceil(#5))};
+	\pgfmathsetmacro\maxz{int(floor(#6))};
+	
+	% checker lines
+	\pgfmathsetmacro\tmpmin{(\minz - 1) * 2};
+	\pgfmathsetmacro\tmpmax{(\maxz + 1) * 2};
+	\foreach \y in {\tmpmin, ..., \tmpmax} {
+		\draw[black!50!white] (-#2 / 2 - 0.66, \y * 0.5 cm) to (#4 + 0.66, \y * 0.5 cm);
+	}
+	
+	\pgfmathsetmacro\tmpmin{(\miny - 1) * 2};
+	\pgfmathsetmacro\tmpmax{(\maxy + 1) * 2};
+	\foreach \x in {\tmpmin, ..., \tmpmax} {
+		\draw[black!50!white] (\x * 0.5, -#2 / 2 - 0.66) to (\x * 0.5, #6 + 0.66);
+	}
+	
+	\achsenEinfach{#1}{#2}{#3}{#4}{#5}{#6}
+}
+
+% 1. Oktand
+\newcommand{\achsenI}[3] {
+	% checkering
+%	\foreach \y in {0, ..., #2} {
+%		\draw[black!50!white] (\x * 0.5, -#2 / 2 - 0.66) to (\x * 0.5, #3 + 0.66);
+%	}
+%	\foreach \z in {0, ..., #3} {
+%		\draw[black!50!white] (-#2 / 2 - 0.66, \y * 0.5 cm) to (#2 + 0.66, \y * 0.5 cm);
+%	}
+	\foreach \x in {0, ..., #1} {
+		\draw[black!50!white] (-\x / 2, -\x / 2) to ++(#2, 0);
+		\draw[black!50!white] (-\x / 2, -\x / 2) to ++(0, #3);
+	}
+	\foreach \y in {0, ..., #2} {
+		\draw[black!50!white] (\y, 0) to ++(0, #3);
+		\draw[black!50!white] (\y, 0) to ++(-#1 / 2, -#1 / 2);
+	}
+	\foreach \z in {0, ..., #3} {
+		\draw[black!50!white] (0, \z) to ++(#2, 0);
+		\draw[black!50!white] (0, \z) to ++(-#1 / 2, -#1 / 2);
+	}
+	
+	\achsenEinfach{0}{#1}{0}{#2}{0}{#3};
+}
+
+\newcommand{\achsenEinfach}[6] {
+	\pgfmathsetmacro\minx{int(ceil(#1))};
+	\pgfmathsetmacro\maxx{int(floor(#2))};
+	
+	\pgfmathsetmacro\miny{int(ceil(#3))};
+	\pgfmathsetmacro\maxy{int(floor(#4))};
+	
+	\pgfmathsetmacro\minz{int(ceil(#5))};
+	\pgfmathsetmacro\maxz{int(floor(#6))};
+	
+	% x from #1 to #2
+	\draw[thick, decoration={markings,mark=at position 1 with {\arrow[scale=1.0,>=stealth]{>}}},postaction={decorate}] (- #1 / 2, - #1 / 2) to (- #2 / 2, - #2 / 2);
+	\foreach \x in {\minx, ..., \maxx} {
+		\if\x0\else
+			\draw[very thick] (-\x / 2 - 0.0375, -\x / 2 + 0.0375) to (-\x / 2 + 0.0375, -\x / 2 - 0.0375);
+			\node at (-\x / 2 - 0.33, -\x / 2) {\scriptsize \x};
+		\fi
+	}
+	\node[label=below left:$x$] at (- #2 / 2, - #2 / 2) {};
+
+	% y from #3 to #4
+	\draw[thick, decoration={markings,mark=at position 1 with {\arrow[scale=1.0,>=stealth]{>}}},postaction={decorate}] (#3, 0) to (#4, 0);
+	\foreach \y in {\miny, ..., \maxy} {
+		\if\y0\else
+			\draw[very thick] (\y, -0.05) to ++(0, 0.1);
+			\node at (\y, -0.25) {\scriptsize \y};
+		\fi
+	}
+	\node[label=right:$y$] at (#4, 0) {};
+
+	% z from #5 to #6
+	\draw[thick, decoration={markings,mark=at position 1 with {\arrow[scale=1.0,>=stealth]{>}}},postaction={decorate}] (0, #5) to (0, #6);
+	\foreach \z in {\minz, ..., \maxz} {
+		\if\z0\else
+			\draw[very thick] (-0.05, \z) to ++(0.1, 0);
+			\node at (-0.25, \z) {\scriptsize \z};
+		\fi
+	}
+	\node[label=above:$z$] at (0, #6) {};
+	
+	% clip area
+	%\clip (-#2 / 2 + #3, -#2 / 2 + #5) rectangle (-#1 / 2 + #4, -#1 / 2 + #6);
+	\clip (-#2 / 2 - 0.66, -#2 / 2 - 0.66) rectangle (#4 + 0.66, #6 + 0.66);
+}
+
+\newcommand{\koord}[4] {
+	% map 3d coord (#2, #3, #4) to 2d coord
+	\def\x{#3 - #2 / 2};
+	\def\y{#4 - #2 / 2};
+	
+	\coordinate (#1) at (\x, \y);
+
+}
+
+% e.g. \punkt{P}{1}{4}{-2}{right};
+\newcommand{\punkt}[6] {
+	\koord{#1}{#2}{#3}{#4}
+	
+	% filled circle as point
+	\node at (#1) {$\times$};
+	\node[label=#5:$#1$] at (\x, \y) {$\times$};
+}
+
+\newcommand{\vektor}[4] {
+	% vector named #1 between points #2 and #3
+	% label alignment via #4
+	\draw[
+		decoration={
+			markings,
+			mark=at position 1 with {\arrow[
+				scale=2.0,
+				>=stealth]{>}}
+			},
+		postaction={decorate}
+	] (#2) -- (#3) node [#4] {#1};
+}
+
+% e.g. \gerade{A}{B}{1.5}{red}
+\newcommand{\gerade}[4] {
+	% draw line from (#1) to (#2) extending by #3 (kind of multiplier)
+	% where #3 = 1 means directly using the given points
+	% and #3 = 2 means extending to both ends by the distance of the points
+	\draw[#4] ($(#1)!-#3+1!(#2)$) to ($(#1)!#3!(#2)$);
+}
+

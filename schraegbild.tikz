@@ -1,0 +1,39 @@
+% name, width, depth
+\newcommand{\projPunkt}[3] {
+	\begin{scope}[xshift=sqrt(0.5) * #3 * 0.5, yshift=sqrt(0.5) * #3 * 0.5]
+		\coordinate (#1) at (#2, 0);
+	\end{scope}
+}
+
+% nameA, nameB, depth
+\newcommand{\projKante}[3] {
+	\projPunkt{#1}{0}{0}
+	\projPunkt{#2}{0}{#3}
+}
+
+% nameA, nameB, nameC, nameCentroid, base, leg
+\newcommand{\projDreieckGleichschenklig}[6] {
+	\projPunkt{#1}{0}{0}
+	\projPunkt{#2}{#5}{0}
+	\projPunkt{#3}{#5 * 0.5}{sqrt(#6 * #6 - 0.25 * #5 * #5)}
+
+	\projPunkt{#4}{0.333 * #5 * 1.5}{0.333 * sqrt(#6 * #6 - 0.25 * #5 * #5)}
+}
+
+% nameA, nameB, nameC, length, nameCentroid
+\newcommand{\projDreieckGleichseitig}[5] {
+	\projPunkt{#1}{0}{0}
+	\projPunkt{#2}{#5}{0}
+	\projPunkt{#3}{#5 * 0.5}{sqrt(0.75 * #5 * #5)}
+
+	\projPunkt{#4}{0.333 * #5 * 1.5}{0.333 * sqrt(0.75 * #5 * #5)}
+}
+
+% nameA, nameB, nameC, nameD, width, depth
+\newcommand{\projRechteck}[6] {
+	\projPunkt{#1}{0}{0}
+	\projPunkt{#2}{#5}{0}
+	\projPunkt{#3}{#5}{#6}
+	\projPunkt{#4}{0}{#6}
+}
+

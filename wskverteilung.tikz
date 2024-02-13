@@ -1,0 +1,77 @@
+% TODO
+
+\newcommand{\wskverteilung}[8]{
+	% #1 - minX
+	% #2 - maxX
+	% #3 - stepX
+	% #4 - minY
+	% #5 - maxY
+	% #6 - stepY
+	% #7 - yScale in %
+	% #8 - combined list of k and P(x=k) values
+
+	% x-Achse
+	\draw[->] (-0.5, 0) to ++({\the\numexpr#2-#1+1.5}, 0);
+	\node at ({\the\numexpr#2-#1+1.75}, 0) {$k$};
+	\foreach \x in {#1, {\the\numexpr#1+#3}, ..., #2} {
+		\node at ({\the\numexpr\x-#1}, -0.25) {\x};
+	}
+
+	% y-Achse
+	\draw[->] (0, 0) to (0, #5 + 0.5);
+	\node at (0, #5 + 0.75) {$P(X=k)$ in \%};
+	\foreach \y in {#4, {\the\numexpr#4+#6}, ..., #5} {
+		\draw (-0.0625, \y) to ++(0.125, 0);
+		\node at (-1, \y) {\the\numexpr#7*\y};
+	}
+
+	% Säulen
+	\foreach[count=\i] \p in #8 {
+		\ifodd\i {
+			\draw[pattern=north west lines] (-0.5 + \i, 0) rectangle ++(1, \p );
+		} \else {
+			\draw[pattern=dots] (-0.5 + \i, 0) rectangle ++(1, \p);
+		}
+		\fi
+	}
+}
+
+
+
+\newcommand{\wskverteilungALT}[8]{
+	% #1 - minX
+	% #2 - maxX
+	% #3 - stepX
+	% #4 - minY
+	% #5 - maxY
+	% #6 - stepY
+	% #7 - yScale in %
+	% #8 - combined list of k and P(x=k) values
+
+	% x-Achse
+	\draw[->] (-0.5, 0) to ++({\the\numexpr#2-#1+1.5}, 0);
+	\node at (#2 + 1.75, 0) {$k$};
+	\foreach \x in {#1, {\the\numexpr#1+#3}, ..., #2} {
+		\node at ({\the\numexpr\x-#1}, -0.25) {\x};
+	}
+
+	% y-Achse
+	\draw[->] (0, 0) to (0, #5 + 0.5);
+	\node at (0, #5 + 0.75) {$P(X=k)$ in \%};
+	\foreach \y in {#4, {\the\numexpr#4+#6}, ..., #5} {
+		\draw (-0.0625, \y) to ++(0.125, 0);
+		\node at (-1, \y) {\the\numexpr#7*\y};
+	}
+
+	% Säulen
+	\foreach[count=\i] \k/\p in #8 {
+		\ifodd\i {
+			\draw[pattern=north west lines] (-0.5 + \k, 0) rectangle ++(1, \p / \the\numexpr#7);
+		} \else {
+			\draw[pattern=dots] (-0.5 + \k, 0) rectangle ++(1, \p / \the\numexpr#7);
+		}
+		\fi
+	}
+}
+
+
