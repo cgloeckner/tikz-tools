@@ -156,9 +156,6 @@
 
 % ==================================
 
-
-
-
 \newcommand{\dreieckSkizze} {
 	\coordinate (A) at (0, 0);
 	\coordinate (B) at (3, 0);
@@ -217,3 +214,4 @@
 	\draw [name intersections={of=BC and AC, by={C, C2}}];
 	\node at (C) {\textbf x};
 }
+
