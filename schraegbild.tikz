@@ -24,9 +24,9 @@
 \newcommand{\projDreieckGleichseitig}[5] {
 	\projPunkt{#1}{0}{0}
 	\projPunkt{#2}{#5}{0}
-	\projPunkt{#3}{#5 * 0.5}{sqrt(0.75 * #5 * #5)}
+	\projPunkt{#3}{#5 * 0.5}{sqrt(0.75) * #5)}
 
-	\projPunkt{#4}{0.333 * #5 * 1.5}{0.333 * sqrt(0.75 * #5 * #5)}
+	\projPunkt{#4}{0.333 * #5 * 1.5}{0.333 * sqrt(0.75) * #5)}
 }
 
 % nameA, nameB, nameC, nameD, width, depth
