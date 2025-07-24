@@ -1,0 +1,45 @@
+
+% #1 Zähler, #2 Nenner
+\newcommand{\kreisanteil}[2] {
+	\pgfmathsetmacro{\endangle}{360*#1/#2}
+
+	\filldraw[yellow!33!white] (0, 0)
+		to (1cm, 0)
+			arc[start angle=0, end angle=\endangle, radius=1cm] 
+		to cycle;
+
+	\draw (0, 0) circle (1cm);
+	
+	\pgfmathsetmacro{\stepangle}{360/#2}
+	\foreach \i in {1,...,#2} {
+		\pgfmathsetmacro{\angle}{\i * \stepangle}
+		\begin{scope}[rotate=\angle]
+			\draw (0, 0) to (1cm, 0);
+		\end{scope}
+	}
+}
+
+% #1 Einteilung, #2 bis, #3 Nummerierung, #4 einzutragende Werte
+\newcommand{\zahlenstrahl}[4] {
+	\pgfmathsetmacro{\drawdist}{#2 * #1 * 0.5cm}
+
+	\draw[step=0.5cm, gray, very thin] (-0.1cm, -0.1cm)
+		grid (\drawdist + 0.6cm, 2 * 0.5cm + 0.1cm);
+
+	\draw[thick, -latex] (0, 0.5)
+		to ++(\drawdist + 0.5cm, 0);
+
+	\foreach \x in {#3} {
+		\pgfmathsetmacro{\xdist}{\x * #1 * 0.5}
+		\draw[thick] (\xdist cm, 0.5cm + 0.125cm)
+			to ++(0, -0.25cm)
+			node[below] {\large $\x$};
+	}
+
+	\foreach \x/\v in {#4} {
+		\pgfmathsetmacro{\xdist}{\x * #1 * 0.5}
+		\draw[thick] (\xdist cm, 0.5cm - 0.125cm)
+			to ++(0, 0.25cm)
+			node[above] {\large $\v$};
+	}
+}

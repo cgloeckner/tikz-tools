@@ -1,0 +1,40 @@
+\tikzset{
+	class/.style={
+		rectangle split,
+		rectangle split parts=3,
+		draw=black,
+		text=black,
+		text width=5cm,
+		font=\footnotesize,
+		align=center,
+		every second node part/.style={font=\ttfamily \footnotesize, align=left},
+		every third node part/.style={font=\ttfamily \footnotesize, align=left},
+	},
+	class_small/.style={
+		draw=black,
+		text=black,
+		text width=2cm,
+		font=\ttfamily \footnotesize,
+		align=center,
+		minimum height=1cm
+	},
+	object/.style={
+		rectangle split,
+		rectangle split parts=2,
+		rounded corners=.5em,
+		draw=black,
+		text=black,
+		text width=5cm,
+		font=\footnotesize,
+		every second node part/.style={font=\ttfamily \footnotesize}
+	},
+	inheritance/.style={
+	    -{Triangle[open, length=8pt, width=8pt]},
+	},
+    composition/.style={
+        -{Diamond[length=8pt, width=8pt]},
+    },
+    aggregation/.style={
+        -{Diamond[open, length=8pt, width=8pt]},
+    }
+}

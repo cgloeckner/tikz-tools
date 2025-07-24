@@ -1,0 +1,111 @@
+% --> \usetikzlibrary{shapes,positioning,calc}
+
+\newcounter{ti}
+
+\newlength{\inshift}
+\setlength{\inshift}{0.5cm}
+
+\newlength{\outshift}
+\setlength{\outshift}{0.5cm}
+
+% Name, Text, Options
+\newcommand{\knoten}[3] {
+	\node[node distance=2cm, minimum width=0.5cm, minimum height=0.5cm, #3] (#1) {#2};
+	\coordinate[inner sep=0] (#1_in) at ([xshift=-\inshift]#1.west);
+	\coordinate[inner sep=0] (#1_out) at ([xshift=\outshift]#1.east);
+}
+
+% Name, Text, Alignment
+% z.B. \terminal{pipe}{\textbar}{below=2cm of foo}
+\newcommand{\terminal}[3] {
+	\knoten{#1}{#2}{draw, rounded corners=.25cm, #3}
+}
+
+% Name, Text, Alignment
+% z.B. \terminal{folge}{Zeichenfolge}{below=2cm of foo}
+\newcommand{\nichtterminal}[3] {
+	\knoten{#1}{#2}{draw, rectangle, #3}
+}
+
+% Name, Text, Alignment, LineDecoration, Knotenmakro
+% z.B. \option{zif}{Ziffer}{right=of foo}{latex-}{\nichtterminal}
+\newcommand{\option}[5] {
+    \coordinate[#3] (#1_split);
+    \coordinate[right=of #1_split] (#1);
+    \coordinate[right=of #1] (#1_merge);
+    
+    #5{#1_main}{#2}{below=0.5cm of #1}
+
+    \draw[#4] (#1_split) |- (#1_main);
+    \draw[#4] (#1_main) -| (#1_merge);
+}
+
+% von, nach, vertikaler Abstand
+% z.B. \umweg{pipe_in}{pipe_out}{-0.5cm}
+\newcommand{\umweg}[3] {
+	\draw[-latex] (#1) to ++(0, #3) -| (#2);
+}
+
+% z.B. \startende{pipe}{folge}
+\newcommand{\startende}[2] {
+    \draw[-latex] ($(#1_in) + (-0.5cm, 0)$) to (#1);
+    \draw[-latex] (#2) to ($(#2_out) + (0.5cm, 0)$);
+}
+
+% Name, Origin, Width, Decoration
+% z.B. \abschluss{ende}{pipe}{2cm}{-latex}
+\newcommand{\abschluss}[4] {
+	\draw[#4] (#2) to ++(#3, 0) coordinate (#1) to ++(#3 * 0.1, 0);
+}
+
+% NamePrefix, Range, Alignment, Knotenmakro
+% z.B. \liste{zif}{A, B, C}{right=of foo}{\nichtterminal}
+\newcommand{\liste}[4] {
+    \setcounter{ti}{0}
+    
+    \foreach \elem in {#2} {
+        \edef\currentname{#1_\number\value{ti}}
+        \ifnum\value{ti}=0
+            #4{\currentname}{\elem}{#3}
+		\else
+		    #4{\currentname}{\elem}{below=0.1cm of #1_\number\numexpr\value{ti}-1\relax}
+		    \draw[-latex] (#1_0_in) |- (\currentname);
+		    \draw[-latex] (\currentname) -| (#1_0_out);
+		\fi
+        \stepcounter{ti}
+    }
+}
+
+% NamePrefix, Ranges, Alignment, Knotenmakro
+% z.B. \liste{zif}{a/Z, 0/9}{right=of foo}{\terminal}
+\newcommand{\bereich}[4] {
+    \setcounter{ti}{0}
+    
+    \foreach \from/\to in {#2} {
+        \edef\fromname{#1_\number\value{ti}_from}
+        \edef\dotsname{#1_\number\value{ti}_dots}
+        \edef\toname{#1_\number\value{ti}_to}
+        
+        \ifnum\value{ti}=0
+            #4{\fromname}{\from}{#3}
+        \else
+            #4{\fromname}{\from}{below=0.1cm of #1_\number\numexpr\value{ti}-1\relax_to}
+        \fi
+        
+        \knoten{\dotsname}{\vdots}{below=-0.2cm of \fromname}
+        #4{\toname}{\to}{below=0cm of \dotsname}
+        
+        \ifnum\value{ti}>0
+            \draw[-latex] (#1_0_from_in) |- (\fromname);
+            \draw (\fromname) -| (#1_0_from_out);
+        \fi
+        \draw[-latex] (#1_0_from_in) |- (\dotsname);
+        \draw[-latex] (#1_0_from_in) |- (\toname);
+        \draw[-latex] (\toname) -| (#1_0_from_out);
+        \draw[-latex] (\dotsname) -| (#1_0_from_out);
+        
+        \stepcounter{ti}
+    }
+}
+
+
