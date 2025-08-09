@@ -1,0 +1,25 @@
+\newcommand{\w} {
+	\filldraw[draw=black, fill=white]
+		(0, 0) to ++(1, 0) to ++(0.5, 0.5) to ++(0, 1) to ++(-1, 0) to ++(-0.5, -0.5) to cycle
+	;
+	\path[draw]
+		(0, 1) to ++(1, 0) to ++(0, -1)
+		(1, 1) to ++(0.5, 0.5)
+	;
+}
+
+% z.B.
+%   \wuerfel{0, 1, 2}{0, 1, 2}{0}
+%   \wuerfel{0, 1}{0, 1}{1}
+%	\wuerfel{0}{0}{2}
+\newcommand{\wuerfel}[3] {
+	\foreach \x in {#1} {
+		\foreach \y in {#2} {
+			\foreach \z in {#3} {
+				\begin{scope}[xshift=\x * -0.5cm + \y * 1cm, yshift=\x * -0.5cm + \z * 1cm]
+					\w
+				\end{scope}
+			}
+		}
+	}
+}

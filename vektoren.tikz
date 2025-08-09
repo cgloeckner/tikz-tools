@@ -181,8 +181,8 @@
 	] (#2) -- (#3) node [#4] {#1};
 }
 
-% e.g. \gerade{A}{B}{1.5}{red}
-\newcommand{\gerade}[4] {
+% e.g. \geradeDurch{A}{B}{1.5}{red}
+\newcommand{\geradeDurch}[4] {
 	% draw line from (#1) to (#2) extending by #3 (kind of multiplier)
 	% where #3 = 1 means directly using the given points
 	% and #3 = 2 means extending to both ends by the distance of the points

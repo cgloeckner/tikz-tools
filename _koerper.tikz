@@ -1,0 +1,49 @@
+
+\tikzstyle{flaeche} = [color=black!50!white, draw=black, fill opacity=0.5]
+
+\newcommand{\quaderSchraegKoord}[3] {
+	\coordinate (A) at (0, 0);
+	\coordinate (B) at (#1, 0);
+	\coordinate (C) at (#1 + #2 * 0.404, #2 * 0.404);
+	\coordinate (D) at (#2 * 0.404, #2 * 0.404);
+
+	\coordinate (E) at (0, #3);
+	\coordinate (F) at (#1, #3);
+	\coordinate (G) at (#1 + #2 * 0.404, #3 + #2 * 0.404);
+	\coordinate (H) at (#2 * 0.404, #3 + #2 * 0.404);
+}
+
+\newcommand{\quaderSchraeg}[4] {
+	\quaderSchraegKoord{#1}{#2}{#3}
+
+	\draw[#4] (A) to (B) to (C) to (G) to (H) to (E) to (F) to (G);
+	\draw[#4] (A) to (E);
+	\draw[#4] (B) to (F);
+	\draw[#4, dashed] (A) to (D) to (C);
+	\draw[#4, dashed] (D) to (H);
+}
+
+\newcommand{\quaderNetz}[4] {
+	\draw[#4] (0, 0) rectangle ++(#1, #2);
+	\draw[#4] (0, #2) rectangle ++(#1, #3);
+	\draw[#4] (0, #2 + #3) rectangle ++(#1, #2);
+	\draw[#4] (0, #2 + #3 + #2) rectangle ++(#1, #3);
+
+	\draw[#4] (#1, #2 + #3) rectangle ++(#3, #2);
+	\draw[#4] (0, #2 + #3) rectangle ++(-#3, #2);
+
+}
+
+\newcommand{\pyramideSchraeg}[4] {
+	\coordinate (A) at (0, 0);
+	\coordinate (B) at (#1, 0);
+	\coordinate (C) at (#1 + #2 * 0.404, #2 * 0.404);
+	\coordinate (D) at (#2 * 0.404, #2 * 0.404);
+	\coordinate (S) at (#1 / 2 + #2 * 0.404 * 0.5, #3 + #2 * 0.404 * 0.5);
+
+	\draw[#4] (A) to (B) to (C) to (S) to (A);
+	\draw[#4] (B) to (S);
+	\draw[#4, dashed] (A) to (D) to (C);
+	\draw[#4, dashed] (D) to (S);
+}
+

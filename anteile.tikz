@@ -23,23 +23,23 @@
 \newcommand{\zahlenstrahl}[4] {
 	\pgfmathsetmacro{\drawdist}{#2 * #1 * 0.5cm}
 
-	\draw[step=0.5cm, gray, very thin] (-0.1cm, -0.1cm)
-		grid (\drawdist + 0.6cm, 2 * 0.5cm + 0.1cm);
+	\draw[step=0.5cm, gray!30, very thin] (-0.1cm, -0.6cm)
+		grid (\drawdist + 0.6cm, 0.5cm + 0.1cm);
 
-	\draw[thick, -latex] (0, 0.5)
+	\draw[thick, -latex] (0, 0)
 		to ++(\drawdist + 0.5cm, 0);
 
 	\foreach \x in {#3} {
 		\pgfmathsetmacro{\xdist}{\x * #1 * 0.5}
-		\draw[thick] (\xdist cm, 0.5cm + 0.125cm)
+		\draw (\xdist cm, 0.125cm)
 			to ++(0, -0.25cm)
-			node[below] {\large $\x$};
+			node[below] {$\x$};
 	}
 
 	\foreach \x/\v in {#4} {
 		\pgfmathsetmacro{\xdist}{\x * #1 * 0.5}
-		\draw[thick] (\xdist cm, 0.5cm - 0.125cm)
+		\draw (\xdist cm, - 0.125cm)
 			to ++(0, 0.25cm)
-			node[above] {\large $\v$};
+			node[above] {$\v$};
 	}
 }
